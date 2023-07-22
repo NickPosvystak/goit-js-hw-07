@@ -1,12 +1,11 @@
-import { galleryItems } from './gallery-items.js';
-// Change code below this line
+import { galleryItems } from "./gallery-items.js";
 
-console.log(galleryItems);
 
-const galleryList = document.querySelector('.gallery')
+const galleryList = document.querySelector(".gallery");
+galleryList.addEventListener("click", onClick);
 
 const galleriItems = ({ preview, original, description }) => {
-    return `  <li class="gallery__item">
+  return `  <li class="gallery__item">
       <a class="gallery__link" href="${original}">
         <img
           class="gallery__image"
@@ -17,24 +16,28 @@ const galleriItems = ({ preview, original, description }) => {
       </a>
     </li>`;
 };
+
 const render = (galleryItems) => {
-    const galleryMarkup = galleryItems.map((item) => galleriItems(item)).join("");
-    
+  const galleryMarkup = galleryItems.map((item) => galleriItems(item)).join("");
+
   galleryList.innerHTML = galleryMarkup;
 };
+
 render(galleryItems);
 
-galleryList.addEventListener("click", onClick)
-
 function onClick(event) {
-    event.preventDefault();
-    
-    const instance = basicLightbox.create(`
-<img src="${original}" width="1200" height="800">
-    `);
-    
-    instance.show();
+  event.preventDefault();
+  for (let i = 0; i < galleryItems.length; i += 1) {
+    if (event.target.getAttribute("src") === galleryItems[i].preview) {
+      const instance = basicLightbox.create(`
+  <img src="${galleryItems[i].original}" width="800" height="600">
+  `);
+      document.body.addEventListener('keydown', (evt) => {
+        if (evt.code === 'Escape') {
+    instance.close();
+  }
+})
+      instance.show();
+    }
+  }
 }
-
-
-
