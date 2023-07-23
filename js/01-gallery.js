@@ -27,17 +27,36 @@ render(galleryItems);
 
 function onClick(event) {
   event.preventDefault();
-  for (let i = 0; i < galleryItems.length; i += 1) {
-    if (event.target.getAttribute("src") === galleryItems[i].preview) {
-      const instance = basicLightbox.create(`
-  <img src="${galleryItems[i].original}" width="800" height="600">
-  `);
-      document.body.addEventListener('keydown', (evt) => {
-        if (evt.code === 'Escape') {
-    instance.close();
-  }
-})
+  
+  const target = event.target;
+  if (target.nodeName !== 'IMG')
+    return;
+
+  const instance = basicLightbox.create(`
+  <img src="${target.dataset.source}" width="800" height="600">
+  `,
+
+    {
+      onShow: (instance) => {
+        // Додаємо обробник клавіатури при відкритті модального вікна
+        const closeModalOnEsc = (event) => {
+          if (event.key === 'Escape') {
+            instance.close();
+          }
+        };
+        document.body.addEventListener("keydown", closeModalOnEsc);
+      },
+   
+
+  
+
+        }  
+      // onClose: (instance) => {
+      //   // Знімаємо обробник клавіатури при закритті модального вікна
+      //   document.body.removeEventListener('keydown', closeModalOnEscape);
+          
+      );
+      
       instance.show();
-    }
-  }
 }
+    // }
