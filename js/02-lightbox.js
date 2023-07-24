@@ -14,20 +14,13 @@ function renderGallery() {
     </li>`
     )
     .join("");
+  
   galleryList.innerHTML = createElement;
 }
 
 renderGallery();
 
-galleryList.addEventListener("click", onClick);
-
-function onClick(event) {
-  event.preventDefault();
-}
-
-let lightbox = new SimpleLightbox(".gallery a", {
-  captions: true,
-  captionPosition: "bottom",
+const lightbox = new SimpleLightbox(".gallery a", {
   captionDelay: "250",
   captionsData: "alt",
 });
