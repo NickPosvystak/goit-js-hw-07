@@ -1,6 +1,5 @@
 import { galleryItems } from "./gallery-items.js";
 
-
 const galleryList = document.querySelector(".gallery");
 galleryList.addEventListener("click", onClick);
 
@@ -25,38 +24,41 @@ const render = (galleryItems) => {
 
 render(galleryItems);
 
+
+let instance = null;
+
 function onClick(event) {
   event.preventDefault();
-  
-  const target = event.target;
-  if (target.nodeName !== 'IMG')
-    return;
 
-  const instance = basicLightbox.create(`
-  <img src="${target.dataset.source}" width="800" height="600">
+  const target = event.target;
+
+  if (target.nodeName !== "IMG") return;
+
+  const source = event.target.dataset.source;
+
+  instance = basicLightbox.create(
+    `
+  <img src="${source}" width="800" height="600">
   `,
 
     {
-      onShow: (instance) => {
-        // Додаємо обробник клавіатури при відкритті модального вікна
-        const closeModalOnEsc = (event) => {
-          if (event.key === 'Escape') {
-            instance.close();
-          }
-        };
+      onShow: () => {
         document.body.addEventListener("keydown", closeModalOnEsc);
       },
-   
 
-  
+      onClose: () => {
+        document.body.removeEventListener("keydown", closeModalOnEsc);
+        instance = null;
+      },
+    }
+  );
 
-        }  
-      // onClose: (instance) => {
-      //   // Знімаємо обробник клавіатури при закритті модального вікна
-      //   document.body.removeEventListener('keydown', closeModalOnEscape);
-          
-      );
-      
-      instance.show();
+  instance.show();
 }
-    // }
+
+function closeModalOnEsc(event) {
+  if (event.key === "Escape") {
+    instance.close();
+  }
+}
+
